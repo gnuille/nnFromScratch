@@ -1,5 +1,6 @@
 # nnFromScratch
 Neural network python class from scratch using python.
 ## Features
-+ 3 layers, 1 input, 1 hidden, 1 outputs
++ Variable number of layers, we can choose 1 or 2 hidden layers
++ Possible to specify size of layers 
 + You can specify activation function using lambda's
