@@ -1,8 +1,5 @@
 # nnFromScratch
-Neural network python class from scratch using python.
-## Features
-+ Variable number of layers, we can choose 1 or 2 hidden layers
-+ Possible to specify size of layers
-+ You can specify activation function using lambda's
-+ save current state of neural network with save("path")
-+ load a state with specifing path in the constructor
+Really basic neural network from scratch, written in python and building it in C.
+
+#Objectives
+Being familiarizated with neural networks and the basics of python and C.
