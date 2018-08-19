@@ -13,4 +13,6 @@ void loadNn(struct nn* neural,int n_layers, int* sizes, int input, int output);
 
 void printNn(struct nn* neural, int debugLvl);
 
+double* predict(struct nn* neural, double* input);
+
 #endif
