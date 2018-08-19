@@ -9,5 +9,6 @@ int main(){
   struct nn neural;
   int sizes[] = {3, 4};
   loadNn(&neural, 2, sizes ,2, 1);
-  printNn(&neural, 1);
+  double inp[] = {0.5, 0.4};
+  predictNn(&neural, inp);
 }

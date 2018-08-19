@@ -57,6 +57,16 @@ void printNn(struct nn* neural, int debugLvl){
   printf("\n");
 }
 
-double* predict(struct nn* neural, double* input){
-  gsl_matrix *mat = gsl_matrix_alloc(nn->weights[0]->size2, 1); //conversion from input vector to matrix
+void predictNn(struct nn* neural, double input[]){
+  gsl_matrix *inp = gsl_matrix_alloc(neural->weights[0]->size2, 1); //conversion from input vector to matrix
+  fromArrayToColumn(inp, input);
+  multiplyMatrix(inp, neural->weights[0]);
+  gsl_matrix_add(inp, neural->biases[0]);
+  int i;
+  for(i = 1; i <=neural->n_layers; i++){
+    multiplyMatrix(inp, neural->weights[i]);
+    gsl_matrix_add(inp, neural->biases[i] );
+  }
+  printMatrix(inp);
+
 }
