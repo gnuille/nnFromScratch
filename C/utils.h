@@ -7,10 +7,10 @@ double randfrom(double min, double max);
 
 void setRandomMat(gsl_matrix* mat, double min, double max);
 
-void printMatrix(gsl_matrix* mat);
+void printMatrix(const gsl_matrix* mat);
 
-void multiplyMatrix(gsl_matrix* a, const gsl_matrix* b);
+void multiplyMatrix(const gsl_matrix* a,const gsl_matrix* b, gsl_matrix* ret);
 
-void fromArrayToColumn(gsl matrix*a, const double vec[]);
+void fromArrayToColumn(gsl_matrix*a, const double vec[]);
 
 #endif

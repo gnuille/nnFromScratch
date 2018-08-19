@@ -17,7 +17,7 @@ void setRandomMat(gsl_matrix* mat, double min, double max)
   }
 }
 
-void printMatrix(gsl_matrix* mat){
+void printMatrix(const gsl_matrix* mat){
   int i,j;
   for(i = 0; i<mat->size1; i++){
     for(j=0; j<mat->size2; j++){
@@ -28,16 +28,20 @@ void printMatrix(gsl_matrix* mat){
   }
 }
 
-void multiplyMatrix(gsl_matrix* a, const gsl_matrix* b){
-  gsl_matrix* ret = gsl_matrix_alloc(a->size1, b->size2);
-
+void multiplyMatrix(const gsl_matrix* a1,const gsl_matrix* b1,gsl_matrix *ret){
+  gsl_matrix* a = gsl_matrix_alloc(a1->size1,a1->size2);
+  gsl_matrix* b = gsl_matrix_alloc(b1->size1,b1->size2);
+  gsl_matrix_memcpy(a, a1);
+  gsl_matrix_memcpy(b, b1);
+  gsl_matrix_free(ret);
+  ret = gsl_matrix_calloc(a->size1,b->size2);
   int n = a->size2;
   int m = a->size1;
   int k = b->size2;
   int i,j,it;
   for(i = 0; i<m; i++){
     for(j = 0; j<k; j++){
-      int sum = 0;
+      double sum = 0;
       for(it = 0; it<n; ++it){
         sum += gsl_matrix_get(a, i, it)*gsl_matrix_get(b, it, j);
       }
@@ -45,12 +49,12 @@ void multiplyMatrix(gsl_matrix* a, const gsl_matrix* b){
     }
   }
   gsl_matrix_free(a);
-  a = ret;
+  gsl_matrix_free(b);
 }
 
-void fromArrayToColumn(gsl matrix*a, const double vec[]){
+void fromArrayToColumn(gsl_matrix*a, const double vec[]){
   int i;
   for(i = 0;i<a->size1;i++){
-    gsl_matrix_set(a, i, 0, vec[i];
+    gsl_matrix_set(a, i, 0, vec[i]);
   }
 }
