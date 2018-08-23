@@ -13,11 +13,11 @@ void loadNn(struct nn* neural,int n_layers, int sizes[], int input, int output){
   neural->biases[0]  = gsl_matrix_calloc(neural->layer_sizes[0], 1    );
   int i;
   for (i = 1; i< n_layers; i++){
-    neural->weights[i] = gsl_matrix_calloc(neural->layer_sizes[i-1], neural->layer_sizes[i]);
+    neural->weights[i] = gsl_matrix_calloc(neural->layer_sizes[i],neural->layer_sizes[i-1]);
     neural->biases[i]  = gsl_matrix_calloc(neural->layer_sizes[i],1);
   }
 
-  neural->weights[n_layers] = gsl_matrix_calloc(output,neural->layer_sizes[n_layers - 1]);
+  neural->weights[n_layers] = gsl_matrix_calloc(output,neural->layer_sizes[n_layers-1]);
   neural->biases[n_layers]  = gsl_matrix_calloc(output,1);
 
 
@@ -38,7 +38,7 @@ void printNn(struct nn* neural, int debugLvl){
     if(i) printf(",");
     printf("%d",neural->layer_sizes[i]);
   }
-
+  printf("\n");
   if (!debugLvl) return;
   printf("Weights:\n");
   for(i = 0; i<=neural->n_layers; ++i)
@@ -62,9 +62,9 @@ void predictNn(struct nn* neural, double input[]){
   gsl_matrix_add(inp, neural->biases[0]);
   int i;
   for(i = 1; i <=neural->n_layers; i++){
-    printMatrix(inp);
     multiplyMatrix(neural->weights[i], inp, inp);
-    gsl_matrix_add(inp, neural->biases[i] );
+    gsl_matrix_add(inp, neural->biases[i]);
+
   }
   printMatrix(inp);
 

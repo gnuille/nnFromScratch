@@ -35,6 +35,9 @@ void multiplyMatrix(const gsl_matrix* a1,const gsl_matrix* b1,gsl_matrix *ret){
   gsl_matrix_memcpy(b, b1);
   gsl_matrix_free(ret);
   ret = gsl_matrix_calloc(a->size1,b->size2);
+  if(a->size2 != b->size1){
+    printf("error cannot multiply matrix with size: (%d,%d)*(%d,%d)",a->size1,a->size2,b->size1,b->size2);
+  }
   int n = a->size2;
   int m = a->size1;
   int k = b->size2;
