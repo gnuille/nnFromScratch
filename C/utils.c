@@ -61,3 +61,7 @@ void fromArrayToColumn(gsl_matrix*a, const double vec[]){
     gsl_matrix_set(a, i, 0, vec[i]);
   }
 }
+
+void actSigmoid(gsl_matrix* inp){
+  
+}

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void loadNn(struct nn* neural,int n_layers, int sizes[], int input, int output){
+void loadNn(struct nn* neural,int n_layers, int sizes[], int input, int output, actFunc act){
   neural->n_layers = n_layers;
   neural->layer_sizes = sizes;
   neural->weights = malloc(sizeof(gsl_matrix*)*n_layers +1);
@@ -26,6 +26,9 @@ void loadNn(struct nn* neural,int n_layers, int sizes[], int input, int output){
     setRandomMat(neural->biases[i] , -1, 1);
   }
 
+  if(act == NULL){
+    neural->act = actSigmoid;
+  }
 }
 
 void printNn(struct nn* neural, int debugLvl){

@@ -3,12 +3,13 @@
 #include <stdlib.h>
 #include <time.h>
 
+
 int main(){
   srand(time(NULL));
 
   struct nn neural;
   int sizes[] = {3, 4};
-  loadNn(&neural, 2, sizes ,2, 1);
+  loadNn(&neural, 2, sizes ,2, 1, NULL);
   double inp[] = {0.5, 0.4};
   predictNn(&neural, inp);
 }
