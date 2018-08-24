@@ -27,7 +27,7 @@ void loadNn(struct nn* neural,int n_layers, int sizes[], int input, int output, 
   }
 
   if(act == NULL){
-    neural->act = actSigmoid;
+    neural->act = sigmoid;
   }
 }
 
@@ -67,8 +67,7 @@ void predictNn(struct nn* neural, double input[]){
   for(i = 1; i <=neural->n_layers; i++){
     multiplyMatrix(neural->weights[i], inp, inp);
     gsl_matrix_add(inp, neural->biases[i]);
-    actSigmoid(inp);
-
+    applyFunMatrix(inp, neural->act);
   }
   printMatrix(inp);
 

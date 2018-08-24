@@ -36,7 +36,7 @@ void multiplyMatrix(const gsl_matrix* a1,const gsl_matrix* b1,gsl_matrix *ret){
   gsl_matrix_free(ret);
   ret = gsl_matrix_calloc(a->size1,b->size2);
   if(a->size2 != b->size1){
-    printf("error cannot multiply matrix with size: (%d,%d)*(%d,%d)",a->size1,a->size2,b->size1,b->size2);
+    printf("error cannot multiply matrix with size: (%zu,%zu)*(%zu,%zu)",a->size1,a->size2,b->size1,b->size2);
   }
   int n = a->size2;
   int m = a->size1;
@@ -60,10 +60,6 @@ void fromArrayToColumn(gsl_matrix*a, const double vec[]){
   for(i = 0;i<a->size1;i++){
     gsl_matrix_set(a, i, 0, vec[i]);
   }
-}
-
-void actSigmoid(gsl_matrix* inp){
-  applyFunMatrix(inp, sigmoid);
 }
 
 void applyFunMatrix(gsl_matrix* inp, funMat fun){
