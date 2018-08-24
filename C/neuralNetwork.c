@@ -8,6 +8,7 @@ void loadNn(struct nn* neural,int n_layers, int sizes[], int input, int output, 
   neural->layer_sizes = sizes;
   neural->weights = malloc(sizeof(gsl_matrix*)*n_layers +1);
   neural->biases  = malloc(sizeof(gsl_matrix*)*n_layers +1);
+  neural->results = malloc(sizeof(gsl_matrix*)*n_layers +1);
 
   neural->weights[0] = gsl_matrix_calloc(neural->layer_sizes[0], input);
   neural->biases[0]  = gsl_matrix_calloc(neural->layer_sizes[0], 1    );
@@ -29,6 +30,12 @@ void loadNn(struct nn* neural,int n_layers, int sizes[], int input, int output, 
   if(act == NULL){
     neural->act = sigmoid;
   }
+
+  for(i = 0; i < n_layers; ++i){
+    neural->results[i] = gsl_matrix_calloc(neural->layer_sizes[i], 1);
+  }
+  neural->results[n_layers] = gsl_matrix_calloc(output, 1);
+
 }
 
 void printNn(struct nn* neural, int debugLvl){
@@ -67,8 +74,27 @@ void predictNn(struct nn* neural, double input[]){
   for(i = 1; i <=neural->n_layers; i++){
     multiplyMatrix(neural->weights[i], inp, inp);
     gsl_matrix_add(inp, neural->biases[i]);
-    applyFunMatrix(inp, neural->act);
   }
+  applyFunMatrix(inp, neural->act);
+
+  printf("Result:\n");
   printMatrix(inp);
 
+}
+
+void stepTrain(struct nn* neural, double* input, double* output){
+  gsl_matrix *inp = gsl_matrix_alloc(neural->weights[0]->size2, 1);
+  gsl_matrix *out = gsl_matrix_alloc(neural->weights[neural->n_layers]->size1, 1);
+
+  fromArrayToColumn(inp, input);
+  fromArrayToColumn(out, output);
+
+  int i;
+  for(i = 0; i <=neural->n_layers; i++){
+    multiplyMatrix(neural->weights[i], inp, inp);
+    gsl_matrix_add(inp, neural->biases[i]);
+    if(i == neural->n_layers) applyFunMatrix(inp, neural->act);
+    gsl_matrix_memcpy(neural->results[i],inp);
+  }
+  printMatrix(inp);
 }

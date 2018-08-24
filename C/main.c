@@ -11,5 +11,6 @@ int main(){
   int sizes[] = {3, 4};
   loadNn(&neural, 2, sizes ,2, 1, NULL);
   double inp[] = {0.5, 0.4};
-  predictNn(&neural, inp);
+  double out[] = {0.1};
+  stepTrain(&neural, inp, out);
 }
