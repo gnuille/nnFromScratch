@@ -67,6 +67,7 @@ void predictNn(struct nn* neural, double input[]){
   for(i = 1; i <=neural->n_layers; i++){
     multiplyMatrix(neural->weights[i], inp, inp);
     gsl_matrix_add(inp, neural->biases[i]);
+    actSigmoid(inp);
 
   }
   printMatrix(inp);

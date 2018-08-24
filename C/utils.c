@@ -63,5 +63,18 @@ void fromArrayToColumn(gsl_matrix*a, const double vec[]){
 }
 
 void actSigmoid(gsl_matrix* inp){
-  
+  applyFunMatrix(inp, sigmoid);
+}
+
+void applyFunMatrix(gsl_matrix* inp, funMat fun){
+  int i,j;
+  for(i = 0; i<inp->size1; i++){
+    for(j=0; j<inp->size2; j++){
+      gsl_matrix_set(inp, i, j, fun(gsl_matrix_get(inp,i,j)));
+    }
+  }
+}
+
+double sigmoid(double inp){
+  return (1)/(1+exp(-inp));
 }
