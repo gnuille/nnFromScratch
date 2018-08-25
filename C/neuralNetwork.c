@@ -96,5 +96,5 @@ void stepTrain(struct nn* neural, double* input, double* output){
     if(i == neural->n_layers) applyFunMatrix(inp, neural->act);
     gsl_matrix_memcpy(neural->results[i],inp);
   }
-  printMatrix(inp);
+  printMatrixArray(neural->results);
 }

@@ -74,3 +74,12 @@ void applyFunMatrix(gsl_matrix* inp, funMat fun){
 double sigmoid(double inp){
   return (1)/(1+exp(-inp));
 }
+
+void printMatrixArray(gsl_matrix** mats, int size){
+  int i;
+  printf("Printing a matrix array...\n");
+  for(i = 0; i<size; i++){
+    printf("Matrix number %d\n",i);
+    printMatrix(mats[i]);
+  }
+}
