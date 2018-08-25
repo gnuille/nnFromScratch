@@ -22,5 +22,7 @@ void applyFunMatrix(gsl_matrix* inp, funMat fun);
 
 double sigmoid(double d);
 
+double sigmoidDerivate(double d);
+
 void printMatrixArray(gsl_matrix** mats, int size);
 #endif

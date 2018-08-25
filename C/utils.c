@@ -75,6 +75,9 @@ double sigmoid(double inp){
   return (1)/(1+exp(-inp));
 }
 
+double sigmoidDerivate(double inp){
+  return inp*(1-inp);
+}
 void printMatrixArray(gsl_matrix** mats, int size){
   int i;
   printf("Printing a matrix array...\n");

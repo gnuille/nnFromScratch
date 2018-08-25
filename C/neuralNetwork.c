@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void loadNn(struct nn* neural,int n_layers, int sizes[], int input, int output, actFunc act){
+void loadNn(struct nn* neural,int n_layers, int sizes[], int input, int output, actFunc act, actFunc derivate){
   neural->n_layers = n_layers;
   neural->layer_sizes = sizes;
   neural->weights = malloc(sizeof(gsl_matrix*)*(n_layers +1));
@@ -27,8 +27,9 @@ void loadNn(struct nn* neural,int n_layers, int sizes[], int input, int output, 
     setRandomMat(neural->biases[i] , -1, 1);
   }
 
-  if(act == NULL){
+  if(act == NULL || derivate == NULL){
     neural->act = sigmoid;
+    neural->derivate = sigmoidDerivate;
   }
 
   for(i = 0; i < n_layers; ++i){
@@ -82,7 +83,7 @@ void predictNn(struct nn* neural, double input[]){
   gsl_matrix_free(inp);
 }
 
-void stepTrain(struct nn* neural, double* input, double* output){
+void stepTrain(struct nn* neural, double* input, double* output, double learning_rate){
   //transform input and output vectors to matrices for easly working
   gsl_matrix *inp = gsl_matrix_alloc(neural->weights[0]->size2, 1);
   gsl_matrix *out = gsl_matrix_alloc(neural->weights[neural->n_layers]->size1, 1);
@@ -104,14 +105,27 @@ void stepTrain(struct nn* neural, double* input, double* output){
   for(i = 0; i<=neural->n_layers; i++){
     errors[i] = gsl_matrix_alloc(neural->biases[i]->size1,1);
   }
-  //calculate the errors
+  //calculate the errors and derivatives for the deltas
   gsl_matrix_memcpy(errors[neural->n_layers],out);
   gsl_matrix_sub(errors[neural->n_layers], inp);
+  gsl_matrix_scale(errors[neural->n_layers], learning_rate);
+  //calulate the derivative of the activation function
+  applyFunMatrix(inp, neural->derivate);
+  //multiply the derivative element by element with the actual error and learing rate
+  gsl_matrix_mul_elements(errors[neural->n_layers], inp);
+
+  //same with the rest of layers avoiding activation function derivative
   for (i = neural->n_layers; i > 0; i--){
+    //get the transpose of the weight responsible for the errors
     gsl_matrix* weightT = gsl_matrix_alloc(neural->weights[i]->size2,neural->weights[i]->size1);
     gsl_matrix_transpose_memcpy(weightT,neural->weights[i]);
+    //dot product of the transpose of the errors with the past errors
     multiplyMatrix(weightT, errors[i], errors[i-1]);
     gsl_matrix_free(weightT);
+    //scale with learning rate
+    gsl_matrix_scale(errors[i-1], learning_rate);
   }
+
+  //calculate the deltas
   printMatrixArray(errors, neural->n_layers+1);
 }
