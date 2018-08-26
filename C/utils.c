@@ -7,6 +7,24 @@ double randfrom(double min, double max)
     return min + (rand() / div);
 }
 
+int randint(int n){
+  if ((n - 1) == RAND_MAX) {
+    return rand();
+  }else{
+    assert (n <= RAND_MAX);
+
+    int end = RAND_MAX / n;
+    assert (end > 0);
+    end *= n;
+
+    int r;
+
+    while((r = rand()) >= end);
+
+    return r % n;
+  }
+}
+
 void setRandomMat(gsl_matrix* mat, double min, double max)
 {
   int i, j;
@@ -86,6 +104,7 @@ double sigmoid(double inp){
 double sigmoidDerivate(double inp){
   return inp*(1-inp);
 }
+
 void printMatrixArray(gsl_matrix** mats, int size){
   int i;
   printf("Printing a matrix array...\n");
@@ -93,4 +112,13 @@ void printMatrixArray(gsl_matrix** mats, int size){
     printf("Matrix number %d\n",i);
     printMatrix(mats[i]);
   }
+}
+
+double* getRowAsArray(gsl_matrix* mat, int row){
+  double* ret = malloc(sizeof(double)*mat->size2);
+  int i;
+  for (i = 0; i<mat->size2; i++){
+    ret[i] = gsl_matrix_get(mat, row, i);
+  }
+  return ret;
 }

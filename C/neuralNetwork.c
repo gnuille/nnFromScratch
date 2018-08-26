@@ -83,14 +83,25 @@ void predictNn(struct nn* neural, double input[]){
   gsl_matrix_free(inp);
 }
 
+void trainNn(struct nn* neural, gsl_matrix* inputs, gsl_matrix* outputs, int size, double learning_rate, int batches){
+  int i;
+  for(i = 0; i<batches; i++){
+    int choice = randint(size);
+    double* inp = getRowAsArray(inputs, choice);
+    double* out = getRowAsArray(outputs, choice);
+    stepTrain(neural, inp ,out , learning_rate);
+    free(inp);
+    free(out);
+  }
+}
+
+
 void stepTrain(struct nn* neural, double* input, double* output, double learning_rate){
   //transform input and output vectors to matrices for easly working
   gsl_matrix *inp = gsl_matrix_alloc(neural->weights[0]->size2, 1);
   gsl_matrix *out = gsl_matrix_alloc(neural->weights[neural->n_layers]->size1, 1);
-
   fromArrayToColumn(inp, input);
   fromArrayToColumn(out, output);
-
   //fastforward like prediction and store temporary results for calculating errors
   int i;
   for(i = 0; i <=neural->n_layers; i++){
@@ -142,12 +153,11 @@ void stepTrain(struct nn* neural, double* input, double* output, double learning
     multiplyMatrix(errors[i],resultT,deltaW);
     gsl_matrix_add(neural->weights[i], deltaW);
     gsl_matrix_free(deltaW);
-    gsl_matrix_add(neural->biases[i], errors[i]);
+    gsl_matrix_sub(neural->biases[i], errors[i]);
     gsl_matrix_free(errors[i]);
   }
   //free everything left
   free(errors);
   gsl_matrix_free(inp);
   gsl_matrix_free(out);
-  printMatrixArray(neural->weights, neural->n_layers+1);
 }

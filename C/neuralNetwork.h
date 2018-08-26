@@ -20,6 +20,8 @@ void printNn(struct nn* neural, int debugLvl);
 
 void predictNn(struct nn* neural, double* input);
 
+void trainNn(struct nn* neural, gsl_matrix* inputs, gsl_matrix* outputs, int size, double learning_rate, int batches);
+
 void stepTrain(struct nn* neural, double* input, double* output, double learning_rate);
 
 #endif
