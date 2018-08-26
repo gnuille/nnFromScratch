@@ -126,6 +126,28 @@ void stepTrain(struct nn* neural, double* input, double* output, double learning
     gsl_matrix_scale(errors[i-1], learning_rate);
   }
 
-  //calculate the deltas
-  printMatrixArray(errors, neural->n_layers+1);
+  //calculate the deltas and update
+
+  for( i = 0; i<=neural->n_layers;i++){
+    gsl_matrix* resultT;
+    if(!i){
+      resultT = gsl_matrix_alloc(1, neural->weights[0]->size2);
+      fromArrayToLine(resultT, input);
+    }else{
+      resultT = gsl_matrix_alloc(neural->results[i-1]->size2, neural->results[i-1]->size1);
+      gsl_matrix_transpose_memcpy(resultT, neural->results[i-1]);
+    }
+
+    gsl_matrix* deltaW = gsl_matrix_alloc(neural->weights[i]->size1, neural->weights[i]->size2);
+    multiplyMatrix(errors[i],resultT,deltaW);
+    gsl_matrix_add(neural->weights[i], deltaW);
+    gsl_matrix_free(deltaW);
+    gsl_matrix_add(neural->biases[i], errors[i]);
+    gsl_matrix_free(errors[i]);
+  }
+  //free everything left
+  free(errors);
+  gsl_matrix_free(inp);
+  gsl_matrix_free(out);
+  printMatrixArray(neural->weights, neural->n_layers+1);
 }

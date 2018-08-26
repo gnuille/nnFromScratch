@@ -62,6 +62,14 @@ void fromArrayToColumn(gsl_matrix*a, const double vec[]){
   }
 }
 
+void fromArrayToLine(gsl_matrix*a, const double vec[]){
+  int i;
+  for(i = 0;i<a->size2;i++){
+    gsl_matrix_set(a, 0, i, vec[i]);
+  }
+}
+
+
 void applyFunMatrix(gsl_matrix* inp, funMat fun){
   int i,j;
   for(i = 0; i<inp->size1; i++){
