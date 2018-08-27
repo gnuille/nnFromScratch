@@ -105,6 +105,16 @@ double sigmoidDerivate(double inp){
   return inp*(1-inp);
 }
 
+double relu(double d){
+  if(d > 0) return d;
+  return 0;
+}
+
+double reluDerivative(double d){
+  if(d > 0) return 1;
+  return 0;
+}
+
 void printMatrixArray(gsl_matrix** mats, int size){
   int i;
   printf("Printing a matrix array...\n");

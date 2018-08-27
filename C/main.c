@@ -29,7 +29,7 @@ int main(){
   gsl_matrix_set(outputs, 2, 0, 0);
   gsl_matrix_set(outputs, 3, 0, 1);
 
-  trainNn(&neural, inputs, outputs, 4, 0.0000000001, 1000000);
+  trainNn(&neural, inputs, outputs, 4, 0.00001, 1000000);
 
   double test[] = {0, 1};
   predictNn(&neural, test);

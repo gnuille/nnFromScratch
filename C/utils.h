@@ -29,6 +29,10 @@ double sigmoid(double d);
 
 double sigmoidDerivate(double d);
 
+double relu(double d);
+
+double reluDerivative(double d);
+
 void printMatrixArray(gsl_matrix** mats, int size);
 
 double* getRowAsArray(gsl_matrix* mat, int row);

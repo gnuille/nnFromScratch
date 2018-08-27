@@ -23,13 +23,18 @@ void loadNn(struct nn* neural,int n_layers, int sizes[], int input, int output, 
 
 
   for(i = 0; i <= n_layers; ++i){
-    setRandomMat(neural->weights[i], -1, 1);
-    setRandomMat(neural->biases[i] , -1, 1);
+    setRandomMat(neural->weights[i], 0, 1);
+    setRandomMat(neural->biases[i] , 0, 1);
+    gsl_matrix_scale(neural->weights[i], 2);
+    gsl_matrix_scale(neural->biases[i],  2);
+    gsl_matrix_add_constant(neural->weights[i], -1);
+    gsl_matrix_add_constant(neural->biases[i],  -1);
+
   }
 
   if(act == NULL || derivate == NULL){
-    neural->act = sigmoid;
-    neural->derivate = sigmoidDerivate;
+    neural->act = relu;
+    neural->derivate = reluDerivative;
   }
 
   for(i = 0; i < n_layers; ++i){
@@ -153,7 +158,7 @@ void stepTrain(struct nn* neural, double* input, double* output, double learning
     multiplyMatrix(errors[i],resultT,deltaW);
     gsl_matrix_add(neural->weights[i], deltaW);
     gsl_matrix_free(deltaW);
-    gsl_matrix_sub(neural->biases[i], errors[i]);
+    gsl_matrix_add(neural->biases[i], errors[i]);
     gsl_matrix_free(errors[i]);
   }
   //free everything left
