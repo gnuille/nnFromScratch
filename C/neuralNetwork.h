@@ -18,7 +18,11 @@ void loadNn(struct nn* neural,int n_layers, int* sizes, int input, int output, a
 
 void printNn(struct nn* neural, int debugLvl);
 
-void predictNn(struct nn* neural, double* input);
+void predictNn(struct nn* neural, double input[],gsl_matrix* res, int debugLvl);
+
+double getErrorPrediction(struct nn* neural, double* input, double* output);
+
+void testNn(struct nn* neural, gsl_matrix* inputs, gsl_matrix* outputs, int size, int n_tests);
 
 void trainNn(struct nn* neural, gsl_matrix* inputs, gsl_matrix* outputs, int size, double learning_rate, int batches);
 

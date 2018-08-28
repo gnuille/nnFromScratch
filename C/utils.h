@@ -37,4 +37,6 @@ void printMatrixArray(gsl_matrix** mats, int size);
 
 double* getRowAsArray(gsl_matrix* mat, int row);
 
+double absoluteValue(double d);
+
 #endif

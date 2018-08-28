@@ -25,10 +25,11 @@ void loadNn(struct nn* neural,int n_layers, int sizes[], int input, int output, 
   for(i = 0; i <= n_layers; ++i){
     setRandomMat(neural->weights[i], 0, 1);
     setRandomMat(neural->biases[i] , 0, 1);
-    gsl_matrix_scale(neural->weights[i], 2);
-    gsl_matrix_scale(neural->biases[i],  2);
     gsl_matrix_add_constant(neural->weights[i], -1);
     gsl_matrix_add_constant(neural->biases[i],  -1);
+    gsl_matrix_scale(neural->weights[i], 2);
+    gsl_matrix_scale(neural->biases[i],  2);
+
 
   }
 
@@ -71,7 +72,7 @@ void printNn(struct nn* neural, int debugLvl){
   printf("\n");
 }
 
-void predictNn(struct nn* neural, double input[]){
+void predictNn(struct nn* neural, double input[],gsl_matrix* res, int debugLvl){
   gsl_matrix *inp = gsl_matrix_alloc(neural->weights[0]->size2, 1); //conversion from input vector to matrix
   fromArrayToColumn(inp, input);
   multiplyMatrix(neural->weights[0], inp, inp);
@@ -82,10 +83,45 @@ void predictNn(struct nn* neural, double input[]){
     gsl_matrix_add(inp, neural->biases[i]);
   }
   applyFunMatrix(inp, neural->act);
-
-  printf("Result:\n");
-  printMatrix(inp);
+  if(debugLvl){
+    printf("Result:\n");
+    printMatrix(inp);
+  }else{
+    gsl_matrix_memcpy(res, inp);
+  }
   gsl_matrix_free(inp);
+}
+
+double getErrorPrediction(struct nn* neural, double* input, double* output){
+  gsl_matrix *out = gsl_matrix_alloc(neural->weights[neural->n_layers]->size1, 1);
+  fromArrayToColumn(out, output);
+  gsl_matrix* mat = gsl_matrix_alloc(out->size1,out->size2);
+  predictNn(neural, input, mat, 0);
+  gsl_matrix_sub(out, mat);
+  applyFunMatrix(out, absoluteValue);
+  double avg = 0;
+  int i;
+  for(i = 0;i<out->size1;i++){
+    avg += gsl_matrix_get(out,i,0);
+  }
+  avg = avg/(out->size1);
+  gsl_matrix_free(mat);
+  gsl_matrix_free(out);
+  return avg;
+}
+
+void testNn(struct nn* neural, gsl_matrix* inputs, gsl_matrix* outputs, int size, int n_tests){
+  int i;
+  double res=0;
+  for(i = 0;i< n_tests; i++){
+    int choice = randint(size);
+    double* inp = getRowAsArray(inputs, choice);
+    double* out = getRowAsArray(outputs, choice);
+    res += getErrorPrediction(neural, inp, out);
+    free(inp);
+    free(out);
+  }
+  printf("Average error for testing is %f\n", res/n_tests);
 }
 
 void trainNn(struct nn* neural, gsl_matrix* inputs, gsl_matrix* outputs, int size, double learning_rate, int batches){

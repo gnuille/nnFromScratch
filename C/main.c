@@ -9,8 +9,8 @@ int main(){
   srand(time(NULL));
 
   struct nn neural;
-  int sizes[] = {2};
-  loadNn(&neural, 1, sizes ,2, 1, NULL, NULL);
+  int sizes[] = {2, 2};
+  loadNn(&neural, 2, sizes ,2, 1, NULL, NULL);
 
   gsl_matrix* inputs = gsl_matrix_alloc(4, 2);
   gsl_matrix* outputs = gsl_matrix_alloc(4,1);
@@ -31,8 +31,5 @@ int main(){
 
   trainNn(&neural, inputs, outputs, 4, 0.00001, 1000000);
 
-  double test[] = {0, 1};
-  predictNn(&neural, test);
-
-
+  testNn(&neural,  inputs, outputs, 4, 1000000);
 }

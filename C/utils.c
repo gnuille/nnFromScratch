@@ -132,3 +132,8 @@ double* getRowAsArray(gsl_matrix* mat, int row){
   }
   return ret;
 }
+
+double absoluteValue(double d){
+  if(d < 0) return d*-1;
+  return d;
+}
